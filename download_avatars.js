@@ -1,9 +1,11 @@
 var request = require('request');
 var token = require('./secrets');
 var fs = require('fs');
+const args = process.argv;
+[ignore, ignore1, owner, name] = args
 
 
-function getRepoContributors(repoOwner, repoName, cb) {
+function getRepoContributors(repoOwner, repoName, cb1) {
     var options = {
         url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
         headers: {
@@ -16,19 +18,24 @@ function getRepoContributors(repoOwner, repoName, cb) {
       };
     
       request(options, function(err, response, body) {
-          err ? console.log(err) : err = null;
-          response ? console.log("Status code: " + response.statusCode) : null
-          var parsed = JSON.parse(body)
-        cb(err, parsed);
-      });
+
+          err ? console.log(err) :  null;
+
+          response ? console.log("Status code: " + response.statusCode) : null;
+
+          if(body) {
+            const parsed = JSON.parse(body)
+            cb1(parsed)
+          }
+          });
   }
 
-  function loopThroughURLs(err, result) {
-    console.log("Errors:", err);
+function loopThroughURLs(result, cb) {
+    
     result.forEach(each => {
-
-        downloadImageByURL(each.avatar_url, each.login)
-
+        let url = each.avatar_url
+        let path = each.login
+        cb(url, path)
     })
   }
 
@@ -50,11 +57,16 @@ function getRepoContributors(repoOwner, repoName, cb) {
     })
   }
 
-  module.exports = {
-      getRepoContributors,
-      downloadImageByURL,
-      loopThroughURLs
-  }
+  getRepoContributors(owner, name, function (data) {
+    loopThroughURLs(data, downloadImageByURL)
+  })
 
-  getRepoContributors("jquery", "jquery", loopThroughURLs);
+//   module.exports = 
+//       getRepoContributors,
+//       downloadImageByURL,
+//       loopThroughURLs
+//   }
+
+
+
   
