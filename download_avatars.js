@@ -4,7 +4,8 @@ var fs = require('fs');
 const args = process.argv;
 [ignore, ignore1, owner, name] = args
 
-
+// uses request library to pass url and headers via options, then handles errors, response, and body
+// passes parsed body data to callback for iteration
 function getRepoContributors(repoOwner, repoName, cb1) {
     var options = {
         url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
@@ -30,6 +31,7 @@ function getRepoContributors(repoOwner, repoName, cb1) {
           });
   }
 
+  // iterates through parsed body data and passed the url and path for download to file
 function loopThroughURLs(result, cb) {
     
     result.forEach(each => {
@@ -38,7 +40,7 @@ function loopThroughURLs(result, cb) {
         cb(url, path)
     })
   }
-
+// accepts url and path and uses request library methods to write .jpg files to files system
   function downloadImageByURL(url, filePath) {
      
     request.get(`${url}`)
@@ -60,12 +62,6 @@ function loopThroughURLs(result, cb) {
   getRepoContributors(owner, name, function (data) {
     loopThroughURLs(data, downloadImageByURL)
   })
-
-//   module.exports = 
-//       getRepoContributors,
-//       downloadImageByURL,
-//       loopThroughURLs
-//   }
 
 
 
