@@ -28,7 +28,7 @@ function getRepoContributors(
       err, 
       response, 
       body,
-      ) {
+    ) {
 
     err ? console.log(err) : null;
 
@@ -53,29 +53,32 @@ function loopThroughURLs(
     cb(
       url, 
       path,
-      )
+    )
   })
 }
 // accepts url and path and uses request library methods to write .jpg files to files system
 function downloadImageByURL(
   url, 
   filePath,
-  ) {
+) {
 
   request.get(`${url}`)
-    .on('error', function(err) {
-      console.log(err)
+    .on('error', 
+        function(err) {
+        console.log(err)
     })
-    .on('response', function(response) {
-      console.log("Downloading...")
-      // console.log(response.statusCode) // 200
-      // console.log(response.statusMessage)
-      // console.log(response.headers['content-type']) 
+    .on('response', 
+        function(response) {
+          console.log("Downloading...")
+          // console.log(response.statusCode) // 200
+          // console.log(response.statusMessage)
+          // console.log(response.headers['content-type']) 
     })
     .pipe(fs.createWriteStream(`./avatars/${filePath}`))
-    .on('finish', function() {
-      console.log('Download finished.')
-    })
+    .on('finish', 
+        function() {
+        console.log('Download finished.')
+        })
 }
 
 getRepoContributors(
