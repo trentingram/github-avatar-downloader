@@ -6,7 +6,11 @@ const args = process.argv;
 
 // uses request library to pass url and headers via options, then handles errors, response, and body
 // passes parsed body data to callback for iteration
-function getRepoContributors(repoOwner, repoName, cb1) {
+function getRepoContributors(
+  repoOwner, 
+  repoName, 
+  cb1,
+  ) {
   var options = {
     url: `https://api.github.com/repos/${repoOwner}/${repoName}/contributors`,
     headers: {
@@ -18,7 +22,13 @@ function getRepoContributors(repoOwner, repoName, cb1) {
     }
   };
 
-  request(options, function(err, response, body) {
+  request(
+    options, 
+    function(
+      err, 
+      response, 
+      body,
+      ) {
 
     err ? console.log(err) : null;
 
@@ -32,16 +42,25 @@ function getRepoContributors(repoOwner, repoName, cb1) {
 }
 
 // iterates through parsed body data and passed the url and path for download to file
-function loopThroughURLs(result, cb) {
+function loopThroughURLs(
+  result, 
+  cb,
+  ) {
 
   result.forEach(each => {
     let url = each.avatar_url
     let path = each.login
-    cb(url, path)
+    cb(
+      url, 
+      path,
+      )
   })
 }
 // accepts url and path and uses request library methods to write .jpg files to files system
-function downloadImageByURL(url, filePath) {
+function downloadImageByURL(
+  url, 
+  filePath,
+  ) {
 
   request.get(`${url}`)
     .on('error', function(err) {
@@ -59,6 +78,12 @@ function downloadImageByURL(url, filePath) {
     })
 }
 
-getRepoContributors(owner, name, function(data) {
-  loopThroughURLs(data, downloadImageByURL)
+getRepoContributors(
+  owner, 
+  name, 
+  function(data) {
+  loopThroughURLs(
+    data, 
+    downloadImageByURL,
+    )
 })
